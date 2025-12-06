@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  rag-api:
+    image: python:3.11-slim
+    container_name: task5_rag_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./task5.db
+      - OPENROUTER_API_KEY=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
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-openai/text-embedding-3-small}
+      - LLM_MODEL=${LLM_MODEL:-openai/gpt-4o-mini}
+      - CHROMA_PERSIST_DIR=/app/chroma_db
+      - CHROMA_COLLECTION_NAME=documents
+      - STORAGE_PATH=/app/documents
+      - CHUNK_SIZE=${CHUNK_SIZE:-500}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-50}
+      - MAX_FILE_SIZE=${MAX_FILE_SIZE:-10485760}
+      - DEFAULT_TOP_K=${DEFAULT_TOP_K:-5}
+      - MAX_TOP_K=${MAX_TOP_K:-10}
+    volumes:
+      # Mount application code and requirements
+      - ./app:/app/app
+      - ./requirements.txt:/app/requirements.txt
+      # Persist database, vector DB, and documents
+      - ./data:/app/data
+      - ./chroma_db:/app/chroma_db
+      - ./documents:/app/documents
+    working_dir: /app
+    command: >
+      sh -c "
+        pip install --no-cache-dir -r requirements.txt &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000
+      "
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
