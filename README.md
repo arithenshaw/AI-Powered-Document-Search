@@ -132,6 +132,27 @@ curl http://localhost:8000/documents
 curl http://localhost:8000/documents/{document_id}
 ```
 
+## Test
+POST - /documents
+Upload a document (PDF, DOCX, or TXT)
+
+Extracts text from the document
+Chunks the text
+Generates embeddings
+Stores in vector database
+Returns document ID and chunk count
+<img width="884" height="212" alt="image" src="https://github.com/user-attachments/assets/444b3f8c-f6cd-41a4-a279-b9f7b734dc9b" />
+
+GET - /documents
+List all uploaded documents with chunk counts
+<img width="673" height="300" alt="image" src="https://github.com/user-attachments/assets/2bf8274e-ec9b-4673-9c65-117c16f420d5" />
+
+GET - /document/{document_id}
+Get document details including extracted text and chunks
+<img width="843" height="378" alt="image" src="https://github.com/user-attachments/assets/a94e274b-eb76-4bcd-bdb3-d9b3731a398e" />
+
+
+
 ## How It Works
 
 1. **Upload**: Document is uploaded, text extracted, split into chunks (~500 tokens)
