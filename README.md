@@ -27,7 +27,6 @@ stage7-task5/
 │       ├── rag_service.py              # RAG answer generation
 │       └── document_service.py         # Document management
 ├── requirements.txt
-├── docker-compose.yml
 └── README.md
 ```
 
