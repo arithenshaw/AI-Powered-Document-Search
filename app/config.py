@@ -12,7 +12,7 @@ class Settings:
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./task5.db")
     
     # OpenRouter Configuration
-    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "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")
+    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
     OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "openai/text-embedding-3-small")
     LLM_MODEL: str = os.getenv("LLM_MODEL", "openai/gpt-4o-mini")
