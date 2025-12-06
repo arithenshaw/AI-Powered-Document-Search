@@ -73,14 +73,27 @@ async def upload_document(
         )
     
     except ValueError as e:
+        # Handle API key errors and validation errors
+        error_msg = str(e)
+        if "OPENROUTER_API_KEY" in error_msg or "authentication" in error_msg.lower():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=error_msg
+            )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
+            detail=error_msg
         )
     except Exception as e:
+        error_msg = str(e)
+        if "authentication" in error_msg.lower() or "401" in error_msg:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=error_msg
+            )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Upload failed: {str(e)}"
+            detail=f"Upload failed: {error_msg}"
         )
 
 

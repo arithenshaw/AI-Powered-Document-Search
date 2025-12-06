@@ -66,8 +66,12 @@ Answer:"""
                 },
             )
             
-            if response.status_code != 200:
-                raise Exception(f"LLM API error: {response.text}")
+            if response.status_code == 401:
+                error_data = response.json() if response.text else {}
+                error_msg = error_data.get("error", {}).get("message", "Authentication failed")
+                raise ValueError(f"OpenRouter API authentication failed: {error_msg}. Please check your OPENROUTER_API_KEY.")
+            elif response.status_code != 200:
+                raise Exception(f"LLM API error (status {response.status_code}): {response.text}")
             
             result = response.json()
             answer = result["choices"][0]["message"]["content"]
