@@ -27,7 +27,16 @@ class VectorDBService:
         if not CHROMADB_AVAILABLE:
             return
         
-        self.client = chromadb.PersistentClient(path=settings.CHROMA_PERSIST_DIR)
+        # Disable telemetry to suppress warnings
+        client_settings = Settings(
+            anonymized_telemetry=False,
+            allow_reset=True
+        )
+        
+        self.client = chromadb.PersistentClient(
+            path=settings.CHROMA_PERSIST_DIR,
+            settings=client_settings
+        )
         self.collection = self.client.get_or_create_collection(
             name=settings.CHROMA_COLLECTION_NAME,
             metadata={"hnsw:space": "cosine"}
